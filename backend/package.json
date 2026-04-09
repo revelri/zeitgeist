@@ -1,5 +1,5 @@
 {
-  "name": "@emotion-hero/backend",
+  "name": "@zeitgeist/backend",
   "version": "1.0.0",
   "description": "Backend server for real-time emotional visualization",
   "main": "dist/index.js",

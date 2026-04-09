@@ -8,7 +8,7 @@ describe('ContentLoader', () => {
   let tmpDir: string;
 
   beforeEach(() => {
-    tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), 'emotion-hero-test-'));
+    tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), 'zeitgeist-test-'));
   });
 
   afterEach(() => {

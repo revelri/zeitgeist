@@ -223,7 +223,7 @@ describe('SettingsApi', () => {
       const res = await makeFetch(TEST_PORT, 'GET', '/');
       expect(res.status).toBe(200);
       expect(res.data).toContain('<!DOCTYPE html>');
-      expect(res.data).toContain('Emotion Hero Settings');
+      expect(res.data).toContain('Zeitgeist Settings');
     });
   });
 

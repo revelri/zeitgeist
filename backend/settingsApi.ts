@@ -3,7 +3,7 @@ import * as fs from 'node:fs';
 import * as path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { EventEmitter } from 'events';
-import { EMOTIONS, EMOTION_IDS } from '@emotion-hero/shared/emotions.js';
+import { EMOTIONS, EMOTION_IDS } from '@zeitgeist/shared/emotions.js';
 import { EmotionDetector } from './emotionDetector.js';
 import { SignalProcessor } from './signalProcessor.js';
 import { WsServer } from './wsServer.js';

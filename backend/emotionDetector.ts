@@ -12,7 +12,7 @@
  */
 
 import { EventEmitter } from 'events';
-import { EMOTIONS, Emotion, EMOTION_IDS } from '@emotion-hero/shared/emotions.js';
+import { EMOTIONS, Emotion, EMOTION_IDS } from '@zeitgeist/shared/emotions.js';
 
 /**
  * Window duration in milliseconds for emotion aggregation.

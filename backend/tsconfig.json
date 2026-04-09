@@ -10,7 +10,7 @@
     "lib": ["ES2022"],
     "types": ["node"],
     "paths": {
-      "@emotion-hero/shared/*": ["../shared/*"]
+      "@zeitgeist/shared/*": ["../shared/*"]
     }
   },
   "include": [

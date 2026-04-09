@@ -10,7 +10,7 @@
  */
 
 import { EventEmitter } from 'events';
-import { EmotionState, EMOTION_IDS } from '@emotion-hero/shared/emotions.js';
+import { EmotionState, EMOTION_IDS } from '@zeitgeist/shared/emotions.js';
 
 /**
  * Configuration for the signal processor (One-Euro Filter)

@@ -147,7 +147,7 @@ export class Firehose extends EventEmitter {
     return new Promise((resolve, reject) => {
       this.ws = new WebSocket(endpoint, {
         headers: {
-          'User-Agent': 'emotion-hero-firehose/1.0',
+          'User-Agent': 'zeitgeist-firehose/1.0',
         },
       });
 

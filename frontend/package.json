@@ -1,5 +1,5 @@
 {
-  "name": "@emotion-hero/frontend",
+  "name": "@zeitgeist/frontend",
   "version": "1.0.0",
   "description": "Frontend client for real-time emotional visualization",
   "type": "module",

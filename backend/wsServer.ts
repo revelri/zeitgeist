@@ -14,7 +14,7 @@
 
 import * as WebSocket from 'ws';
 import { EventEmitter } from 'events';
-import { EmotionState } from '@emotion-hero/shared/emotions.js';
+import { EmotionState } from '@zeitgeist/shared/emotions.js';
 
 /**
  * WebSocket message payload for emotion state updates

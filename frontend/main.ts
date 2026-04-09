@@ -1,5 +1,5 @@
 /**
- * Main entry point for the Emotion Hero frontend application.
+ * Main entry point for the Zeitgeist frontend application.
  *
  * This file initializes the WebGL2 renderer and establishes a WebSocket connection
  * to the backend for real-time emotional data visualization.
