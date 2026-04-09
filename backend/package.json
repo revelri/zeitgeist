@@ -1,0 +1,21 @@
+{
+  "name": "@emotion-hero/backend",
+  "version": "1.0.0",
+  "description": "Backend server for real-time emotional visualization",
+  "main": "dist/index.js",
+  "type": "module",
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "start": "node dist/index.js",
+    "clean": "rm -rf dist"
+  },
+  "dependencies": {
+    "ws": "^8.16.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.10.6",
+    "@types/ws": "^8.5.10",
+    "typescript": "^5.3.3"
+  }
+}

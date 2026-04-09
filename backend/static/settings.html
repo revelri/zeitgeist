@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Emotion Hero Settings</title>
+<style>
+  :root {
+    --bg: #1a1d23;
+    --surface: #22262e;
+    --border: #333842;
+    --text: #c8cdd5;
+    --text-dim: #8891a0;
+    --accent: #87a99e;
+    --accent-hover: #9bc0b3;
+    --danger: #d46b6b;
+    --success: #6bbd7a0;
+    --radius: 8px;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'SF Mono', 'Fira Code', 'Cascadia Code', monospace; background: var(--bg); color: var(--text); padding: 20px; line-height: 1.6; }
+  h1 { color: var(--accent); margin-bottom: 20px; font-size: 1.4rem; }
+  .card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); margin-bottom: 16px; overflow: hidden; }
+  .card-header { padding: 12px 16px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; user-select: none; }
+  .card-header:hover { background: rgba(135,169,158,0.05); }
+  .card-header h2 { font-size: 0.9rem; font-weight: 600; }
+  .card-header .toggle { color: var(--text-dim); font-size: 0.8rem; }
+  .card-body { padding: 0 16px 16px; }
+  .card.collapsed .card-body { display: none; }
+  .field { margin-bottom: 12px; }
+  .field label { display: block; font-size: 0.75rem; color: var(--text-dim); margin-bottom: 4px; text-transform: uppercase; letter-spacing: 0.5px; }
+  .field input[type="text"], .field input[type="number"] { width: 100%; padding: 6px 10px; background: var(--bg); border: 1px solid var(--border); border-radius: 4px; color: var(--text); font-family: inherit; font-size: 0.85rem; }
+  .field input:focus { outline: none; border-color: var(--accent); }
+  .field input[type="range"] { width: 100%; accent-color: var(--accent); }
+  .field select { width: 100%; padding: 6px 10px; background: var(--bg); border: 1px solid var(--border); border-radius: 4px; color: var(--text); font-family: inherit; font-size: 0.85rem; }
+  .field .value { float: right; color: var(--accent); font-size: 0.8rem; }
+  .field .inline { display: flex; align-items: center; gap: 8px; }
+  .field .inline input[type="checkbox"] { accent-color: var(--accent); }
+  .keywords-section { margin-bottom: 8px; }
+  .keywords-section h3 { font-size: 0.8rem; margin-bottom: 6px; display: flex; align-items: center; gap: 6px; }
+  .keywords-section .color-swatch { display: inline-block; width: 10px; height: 10px; border-radius: 2px; }
+  .tags { display: flex; flex-wrap: wrap; gap: 4px; margin-bottom: 6px; }
+  .tag { display: inline-flex; align-items: center; gap: 4px; padding: 2px 8px; background: rgba(135,169,158,0.15); border: 1px solid rgba(135,169,158,0.3); border-radius: 4px; font-size: 0.75rem; }
+  .tag .remove { cursor: pointer; color: var(--danger); font-weight: bold; }
+  .tag .remove:hover { color: #e88; }
+  .add-keyword { display: flex; gap: 4px; }
+  .add-keyword input { flex: 1; padding: 4px 8px; background: var(--bg); border: 1px solid var(--border); border-radius: 4px; color: var(--text); font-family: inherit; font-size: 0.75rem; }
+  .add-keyword button { padding: 4px 10px; background: var(--accent); color: var(--bg); border: none; border-radius: 4px; cursor: pointer; font-family: inherit; font-size: 0.75rem; }
+  .add-keyword button:hover { background: var(--accent-hover); }
+  .status-grid { display: grid; grid-template-columns: auto 1fr; gap: 4px 12px; font-size: 0.8rem; }
+  .status-grid dt { color: var(--text-dim); }
+  .status-grid dd { font-weight: 600; }
+  .status-indicator { display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-right: 6px; }
+  .status-indicator.connected { background: var(--success); }
+  .status-indicator.disconnected { background: var(--danger); }
+  .btn { padding: 6px 14px; border: 1px solid var(--border); border-radius: 4px; background: var(--surface); color: var(--text); cursor: pointer; font-family: inherit; font-size: 0.8rem; }
+  .btn:hover { border-color: var(--accent); color: var(--accent); }
+  .toast { position: fixed; bottom: 20px; right: 20px; padding: 10px 16px; border-radius: var(--radius); font-size: 0.8rem; opacity: 0; transition: opacity 0.3s; z-index: 100; }
+  .toast.show { opacity: 1; }
+  .toast.success { background: var(--success); color: var(--bg); }
+  .toast.error { background: var(--danger); color: #fff; }
+  .color-row { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+  .color-row label { width: 80px; font-size: 0.8rem; color: var(--text-dim); text-transform: capitalize; flex-shrink: 0; margin-bottom: 0; }
+  .color-swatch-btn { width: 32px; height: 32px; border-radius: 4px; border: 1px solid var(--border); cursor: pointer; padding: 0; flex-shrink: 0; position: relative; overflow: hidden; }
+  .color-swatch-btn input[type="color"] { position: absolute; inset: -4px; width: calc(100% + 8px); height: calc(100% + 8px); border: none; cursor: pointer; background: none; }
+  .color-hex-input { width: 90px; padding: 6px 8px; background: var(--bg); border: 1px solid var(--border); border-radius: 4px; color: var(--text); font-family: inherit; font-size: 0.85rem; }
+  .color-hex-input:focus { outline: none; border-color: var(--accent); }
+  .color-preview { width: 100%; height: 4px; border-radius: 2px; margin-top: 2px; }
+  @media (max-width: 600px) { body { padding: 10px; } .card-body { padding: 0 10px 10px; } }
+</style>
+</head>
+<body>
+<h1>Emotion Hero Settings</h1>
+<div id="app"></div>
+<div id="toast" class="toast"></div>
+<script>
+const API = window.location.origin;
+const EMOTIONS = ['serene', 'vibrant', 'melancholy', 'curious', 'content'];
+const EMOTION_COLORS = { serene: '#87a99e', vibrant: '#ad9387', melancholy: '#919baf', curious: '#a5a091', content: '#9ba591' };
+const SHADER_MODES = ['Voronoi','Curl Noise','Domain-Warped FBM','Metaballs','Flow Field','Reaction-Diffusion','Chladni','Cymatics','Julia Set','Gravity Lens','Attractor','Cracks','Smoke','Topography','Magnetic LIC','Lissajous','Phyllotaxis','Ink Flow'];
+
+function el(tag, attrs = {}, children = []) {
+  const e = document.createElement(tag);
+  for (const [k, v] of Object.entries(attrs)) {
+    if (k === 'className') e.className = v;
+    else if (k === 'textContent') e.textContent = v;
+    else if (k.startsWith('on')) e.addEventListener(k.slice(2).toLowerCase(), v);
+    else e.setAttribute(k, v);
+  }
+  for (const c of children) { if (typeof c === 'string') e.appendChild(document.createTextNode(c)); else e.appendChild(c); }
+  return e;
+}
+
+function toast(msg, type = 'success') {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'toast ' + type + ' show';
+  setTimeout(() => { t.classList.remove('show'); }, 2500);
+}
+
+async function api(path, method = 'GET', body) {
+  const opts = { method, headers: { 'Content-Type': 'application/json' } };
+  if (body) opts.body = JSON.stringify(body);
+  const res = await fetch(API + path, opts);
+  return { status: res.status, data: await res.json() };
+}
+
+function makeCard(title, id, contentFn) {
+  const card = el('div', { className: 'card' });
+  const header = el('div', { className: 'card-header', onclick: () => card.classList.toggle('collapsed') },
+    [el('h2', { textContent: title }), el('span', { className: 'toggle', textContent: '\u25BC' })]);
+  const body = el('div', { className: 'card-body', id: id + '-content' });
+  contentFn(body);
+  card.appendChild(header);
+  card.appendChild(body);
+  return { card, body };
+}
+
+function makeField(label, id, inputEl) {
+  const field = el('div', { className: 'field' });
+  field.appendChild(el('label', { textContent: label }));
+  field.appendChild(inputEl);
+  return field;
+}
+
+async function loadSettings() {
+  try {
+    const { data } = await api('/api/settings');
+    renderFirehose(data.firehose);
+    renderColors(data.colors);
+    renderKeywords(data.keywords);
+    renderSignal(data.signal);
+    renderVisualization(data.visualization);
+  } catch (e) { console.error('Failed to load settings:', e); }
+}
+
+function renderColors(colors) {
+  const c = document.getElementById('colors-content');
+  if (!c) return;
+  c.innerHTML = '';
+  const currentColors = {};
+  for (const emotion of EMOTIONS) {
+    const color = colors && colors[emotion] ? colors[emotion].hex : EMOTION_COLORS[emotion];
+    currentColors[emotion] = color;
+    const row = el('div', { className: 'color-row' });
+    const label = el('label', { textContent: emotion });
+
+    const swatchBtn = el('div', { className: 'color-swatch-btn' });
+    swatchBtn.style.background = color;
+    const picker = el('input', { type: 'color', value: color, 'data-emotion': emotion, oninput: (e) => {
+      const hex = e.target.value;
+      swatchBtn.style.background = hex;
+      hexInput.value = hex;
+      currentColors[emotion] = hex;
+    }});
+    swatchBtn.appendChild(picker);
+
+    const hexInput = el('input', { type: 'text', className: 'color-hex-input', value: color, placeholder: '#000000', 'data-emotion': emotion, onchange: (e) => {
+      let val = e.target.value.trim();
+      if (!val.startsWith('#')) val = '#' + val;
+      if (/^#[0-9a-fA-F]{6}$/.test(val)) {
+        swatchBtn.style.background = val;
+        picker.value = val;
+        currentColors[emotion] = val;
+      } else {
+        toast('Invalid hex: use format #RRGGBB', 'error');
+        e.target.value = currentColors[emotion];
+      }
+    }});
+
+    row.append(label, swatchBtn, hexInput);
+    c.appendChild(row);
+  }
+  const saveBtn = el('button', { className: 'btn', textContent: 'Save Colors', onclick: async () => {
+    try {
+      const r = await api('/api/settings/colors', 'PUT', currentColors);
+      if (r.status === 200) toast('Colors saved & broadcast');
+      else toast(r.data.error, 'error');
+    } catch (e) { toast('Failed to save colors', 'error'); }
+  }});
+  c.appendChild(saveBtn);
+}
+
+function renderFirehose(fh) {
+  const c = document.getElementById('firehose-content');
+  if (!c || !fh) return;
+  c.innerHTML = '';
+  const endpointField = makeField('Endpoint', 'fh-endpoint', el('input', { type: 'text', value: fh.endpoint || '', id: 'fh-endpoint' }));
+  const retryField = makeField('Retry Interval (ms)', 'fh-retry', el('input', { type: 'number', value: fh.retryInterval, id: 'fh-retry', step: 500 }));
+  const maxRetriesField = makeField('Max Retries', 'fh-max-retries', el('input', { type: 'number', value: fh.maxRetries, id: 'fh-max-retries' }));
+  const saveBtn = el('button', { className: 'btn', textContent: 'Save', onclick: async () => {
+    try {
+      const r = await api('/api/settings/firehose', 'PUT', { endpoint: document.getElementById('fh-endpoint').value, retryInterval: parseInt(document.getElementById('fh-retry').value), maxRetries: parseInt(document.getElementById('fh-max-retries').value) });
+      if (r.status === 200) toast('Firehose settings saved'); else toast(r.data.error, 'error');
+    } catch (e) { toast('Failed to save', 'error'); }
+  } });
+  c.append(endpointField, retryField, maxRetriesField, saveBtn);
+}
+
+function renderKeywords(kw) {
+  const c = document.getElementById('keywords-content');
+  if (!c || !kw) return;
+  c.innerHTML = '';
+  for (const emotion of EMOTIONS) {
+    const section = el('div', { className: 'keywords-section' });
+    section.appendChild(el('h3', {}, [el('span', { className: 'color-swatch', style: `background:${EMOTION_COLORS[emotion]}` }), el('span', { textContent: emotion })]));
+    const tags = el('div', { className: 'tags' });
+    for (const k of (kw[emotion] || [])) {
+      const tag = el('span', { className: 'tag' }, [el('span', { textContent: k }), el('span', { className: 'remove', textContent: '\u00D7', onclick: async () => {
+        const updated = (kw[emotion] || []).filter(x => x !== k);
+        try { const r = await api('/api/settings/keywords', 'PUT', { [emotion]: updated }); if (r.status === 200) { toast(`Removed "${k}" from ${emotion}`); loadSettings(); } else toast(r.data.error, 'error'); } catch (e) { toast('Failed', 'error'); }
+      }})]);
+      tags.appendChild(tag);
+    }
+    const addRow = el('div', { className: 'add-keyword' },
+      [el('input', { type: 'text', placeholder: 'New keyword...', id: `kw-add-${emotion}` }), el('button', { textContent: '+', onclick: async () => {
+        const input = document.getElementById(`kw-add-${emotion}`);
+        const val = input.value.trim();
+        if (!val) return;
+        const updated = [...(kw[emotion] || []), val];
+        try { const r = await api('/api/settings/keywords', 'PUT', { [emotion]: updated }); if (r.status === 200) { toast(`Added "${val}" to ${emotion}`); input.value = ''; loadSettings(); } else toast(r.data.error, 'error'); } catch (e) { toast('Failed', 'error'); }
+      }})]);
+    section.append(tags, addRow);
+    c.appendChild(section);
+  }
+}
+
+function renderSignal(sig) {
+  const c = document.getElementById('signal-content');
+  if (!c || !sig) return;
+  c.innerHTML = '';
+  const minField = makeField('minCutoff', 'sig-min', el('div', { className: 'inline' },
+    [el('input', { type: 'range', min: 0.1, max: 5, step: 0.1, value: sig.minCutoff, id: 'sig-min', oninput: (e) => { document.getElementById('sig-min-val').textContent = e.target.value; } }), el('span', { className: 'value', id: 'sig-min-val', textContent: sig.minCutoff.toFixed(1) })]));
+  const betaField = makeField('beta', 'sig-beta', el('div', { className: 'inline' },
+    [el('input', { type: 'range', min: 0.001, max: 0.1, step: 0.001, value: sig.beta, id: 'sig-beta', oninput: (e) => { document.getElementById('sig-beta-val').textContent = e.target.value; } }), el('span', { className: 'value', id: 'sig-beta-val', textContent: sig.beta.toFixed(3) })]));
+  const saveBtn = el('button', { className: 'btn', textContent: 'Save', onclick: async () => {
+    try {
+      const r = await api('/api/settings/signal', 'PUT', { minCutoff: parseFloat(document.getElementById('sig-min').value), beta: parseFloat(document.getElementById('sig-beta').value) });
+      if (r.status === 200) toast('Signal settings saved'); else toast(r.data.error, 'error');
+    } catch (e) { toast('Failed to save', 'error'); }
+  } });
+  c.append(minField, betaField, saveBtn);
+}
+
+function renderVisualization(viz) {
+  const c = document.getElementById('viz-content');
+  if (!c || !viz) return;
+  c.innerHTML = '';
+  const select = el('select', { id: 'viz-shader' });
+  SHADER_MODES.forEach((name, i) => select.appendChild(el('option', { value: i, textContent: name })));
+  const shaderField = makeField('Shader Mode', 'viz-shader', select);
+  const feedbackField = makeField('Feedback Strength', 'viz-feedback', el('div', { className: 'inline' },
+    [el('input', { type: 'range', min: 0, max: 0.95, step: 0.05, value: 0.5, id: 'viz-feedback', oninput: (e) => { document.getElementById('viz-feedback-val').textContent = e.target.value; } }), el('span', { className: 'value', id: 'viz-feedback-val', textContent: '0.50' })]));
+  const motionField = makeField('Reduced Motion', 'viz-motion', el('div', { className: 'inline' },
+    [el('input', { type: 'checkbox', id: 'viz-motion' })]));
+  const saveBtn = el('button', { className: 'btn', textContent: 'Save', onclick: async () => {
+    try {
+      const r = await api('/api/settings/visualization', 'PUT', { shaderMode: parseInt(document.getElementById('viz-shader').value), feedbackStrength: parseFloat(document.getElementById('viz-feedback').value), reducedMotion: document.getElementById('viz-motion').checked });
+      if (r.status === 200) toast('Visualization settings saved & broadcast'); else toast(r.data.error, 'error');
+    } catch (e) { toast('Failed to save', 'error'); }
+  } });
+  c.append(shaderField, feedbackField, motionField, saveBtn);
+}
+
+async function loadStatus() {
+  try {
+    const { data } = await api('/api/status');
+    const c = document.getElementById('status-content');
+    if (!c) return;
+    const uptime = Math.floor(data.uptime / 1000);
+    const mins = Math.floor(uptime / 60);
+    const secs = uptime % 60;
+    c.innerHTML = '';
+    const dl = el('dl', { className: 'status-grid' });
+    const fhStatus = data.firehose?.connectionState?.status || 'unknown';
+    dl.append(
+      el('dt', { textContent: 'Firehose' }), el('dd', { textContent: fhStatus }),
+      el('dt', { textContent: 'Detector' }), el('dd', { textContent: data.emotionDetector?.isRunning ? 'Running' : 'Stopped' }),
+      el('dt', { textContent: 'WS Clients' }), el('dd', { textContent: String(data.clients || 0) }),
+      el('dt', { textContent: 'Uptime' }), el('dd', { textContent: `${mins}m ${secs}s` }),
+    );
+    c.appendChild(dl);
+  } catch (e) { console.error('Failed to load status:', e); }
+}
+
+function init() {
+  const app = document.getElementById('app');
+  const cards = [
+    makeCard('Jetstream / Firehose', 'firehose', () => {}),
+    makeCard('Emotion Colors', 'colors', () => {}),
+    makeCard('Emotion Keywords', 'keywords', () => {}),
+    makeCard('Signal Processing', 'signal', () => {}),
+    makeCard('Detector', 'detector', (c) => c.appendChild(el('p', { textContent: 'Window duration: 1500ms (configurable in code)' }))),
+    makeCard('Visualization', 'viz', () => {}),
+    makeCard('System Status', 'status', () => {}),
+  ];
+  for (const { card } of cards) app.appendChild(card);
+  loadSettings();
+  loadStatus();
+  setInterval(loadStatus, 2000);
+}
+
+document.addEventListener('DOMContentLoaded', init);
+</script>
+</body>
+</html>
