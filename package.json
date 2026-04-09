@@ -9,7 +9,7 @@
     "shared"
   ],
   "scripts": {
-    "build": "npm run build --workspaces",
+    "build": "npm run build -w shared && npm run build -w backend && npm run build -w frontend",
     "dev": "npm run dev --workspaces --parallel",
     "clean": "npm run clean --workspaces",
     "type-check": "tsc --noEmit",

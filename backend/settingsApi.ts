@@ -26,7 +26,7 @@ interface SettingsApiConfig {
   emotionDetector: EmotionDetector;
   signalProcessor: SignalProcessor;
   wsServer: WsServer;
-  contentLoader: ContentLoader;
+  contentLoader?: ContentLoader;
 }
 
 function json(res: http.ServerResponse, data: unknown, status = 200): void {
@@ -331,7 +331,7 @@ export class SettingsApi extends EventEmitter {
     }
 
     // Merge with existing colors
-    const current = this.config.contentLoader.getState().colors;
+    const current = this.config.contentLoader?.getState().colors ?? {};
     const merged: Record<string, string> = {};
     for (const [id, color] of Object.entries(current)) {
       merged[id] = color.hex;
@@ -341,7 +341,7 @@ export class SettingsApi extends EventEmitter {
     }
 
     try {
-      await this.config.contentLoader.updateColors(merged);
+      await this.config.contentLoader!.updateColors(merged);
       json(res, { ok: true });
     } catch (e) {
       json(res, { error: 'Failed to write colors' }, 500);
