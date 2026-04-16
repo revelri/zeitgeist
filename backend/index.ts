@@ -297,7 +297,7 @@ const defaultConfig: SystemConfig = {
   firehose: {
     sources: [],
     retryInterval: 5000,
-    maxRetries: 10,  // More retries for resilience
+    maxRetries: Infinity,  // Never give up — this is a long-running service
   },
   emotionDetector: {
     models: [],

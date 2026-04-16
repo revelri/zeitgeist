@@ -123,9 +123,9 @@ export class SignalProcessor extends EventEmitter {
     // Emit processed event with all current emotion states
     const allStates: Record<string, EmotionState> = {};
 
-    // Add minimum baseline (10%) to each emotion so all are visible
-    // Then normalize to ensure values sum to 1.0
-    const minBaseline = 0.1;
+    // Add tiny baseline so no emotion is truly invisible, then normalize
+    // Old value (0.1) flattened ratios to ~0.2 when raw signals were small
+    const minBaseline = 0.001;
     const numEmotions = this.emotionStates.size;
 
     let totalValue = 0;
